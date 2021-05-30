@@ -4,13 +4,13 @@ import numpy as np
 
 def amount_of_squares(p, v, busbar_sheet_r, ptc_sheet_r, coat):
     watt_density = 0.2
-    # in W/cm2
+    # this is suggested by Henkel (in W/cm2)
 
     r = v ** 2 / p
     i = v / r
 
-    busbar_width = math.sqrt((busbar_sheet_r * 25 / coat) * i ** 2 / watt_density)
-    # in cm
+    busbar_width = (math.sqrt((busbar_sheet_r * 25 / coat) * i ** 2 / watt_density))*10
+    # in mm
     squares = (ptc_sheet_r * 25 / coat) / r
     print(squares)
 
@@ -64,20 +64,21 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat):
             h_real = h - 2*margin_H
             w_real = w - 2*margin_W
 
-            for square_W in np.arange(min_dimension, max_dimension, 0.5):
+            for square_W in np.arange(5, 15, 0.5):
 
-                for space_W in np.arange(math.sqrt(min_area_left), math.sqrt(max_area_left), 0.5):
+                for space_W in np.arange(2, 7, 0.5):
 
-                    for square_H in np.arange(min_dimension, max_dimension, 0.5):
+                    for square_H in np.arange(5, 15, 0.5):
 
-                        for space_H in np.arange(math.sqrt(min_area_left), math.sqrt(max_area_left), 0.5):
+                        for space_H in np.arange(2.5, 7, 0.5):
 
                             # calculations of amount of elements needed considering the ratio square_W, square_H
                             real_squares = squares
-                            if square_H <= square_W:
-                                real_squares = round(square_W / square_H * squares)
-                            elif square_H > square_W:
-                                real_squares = round(square_H / square_W * squares)
+                            real_squares = round(square_H / square_W * squares)
+                            # if square_H <= square_W:
+                            #     real_squares = round(square_W / square_H * squares)
+                            # elif square_H > square_W:
+                            #     real_squares = round(square_H / square_W * squares)
 
                             if square_W*square_H*real_squares < h*w:
 

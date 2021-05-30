@@ -11,7 +11,7 @@ maximum = 0
 index = 0
 for i in range(0, len(d["square_W"])):
     m = d["square_W"][i]*d["square_H"][i]*d["amount_sq_H"][i]*d["amount_sq_W"][i]
-    if m > maximum:
+    if m > maximum and d["margin_H"][i] > 1 and d["margin_H"][i] > 1:
         maximum = m
         index = i
 print([maximum, index])
