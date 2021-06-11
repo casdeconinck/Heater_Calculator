@@ -12,7 +12,6 @@ def amount_of_squares(p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver):
     busbar_width = (math.sqrt((busbar_sheet_r * 25 / coat_silver) * i ** 2 / watt_density))*10
     # in mm
     squares = (ptc_sheet_r * 25 / coat_ptc) / r
-    print(squares)
 
     return [busbar_width, squares]
 
@@ -27,8 +26,6 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver):
     busbar_width = spec[0]
     w = int(w - 2*float(busbar_width))
     h = int(h - float(busbar_width))
-    print(h)
-    print(w)
 
     for margin_H in np.arange(0.5, 3, 0.2):
 

@@ -20,7 +20,10 @@ def visual():
     scale = 2000/200
     d = pandas.read_csv("answers.csv")
     n = max_coverage(d)[1]
-    print(max_coverage(d))
+    coverage = round((float(max_coverage(d)[0])/(float(d[d.index == n]['h'])*float(d[d.index == n]['w'])))*100)
+    print(f"maximal covered area of ptc elements: "
+          f"{coverage}%")
+    print(f"number in answers.csv with max coverage: {max_coverage(d)[1]}")
     print(d[d.index == n])
 
     h = d["h"][n]*scale
