@@ -4,16 +4,21 @@ import time
 import numpy as np
 from pynput.keyboard import Key
 from pynput.mouse import Button
-from Visualisation import max_coverage
+# from Visualisation import max_coverage
 import keyboard
 
-# reading the csv file we got from our main program
+# keep into account before starting automated drawing:
+# keeping space key pressed for a while will terminate the program
+# adjust for personalised coordinates
+# make sure coreldraw opens on full PC (not separate screen)
+# make sure properties tab in corel draw is always open when coreldraw starts
+# make sure everything is in 'mm' also in properties tab!
 
 
-def draw():
-
+def draw(n):
+    # reading the csv file we got from our main program
     d = pandas.read_csv("answers.csv")
-    n = max_coverage(d)[1]
+    # n = max_coverage(d)[1]
     space_H = d["space_H"][n]
     space_W = d["space_W"][n]
     square_H = d["square_H"][n]
@@ -22,7 +27,6 @@ def draw():
     margin_W = d["margin_W"][n]
     amount_sq_H = d["amount_sq_H"][n]
     amount_sq_W = d["amount_sq_W"][n]
-
     busbar_width = str(d["busbar_width"][n])
     height = str(d["h"][n])
     width = str(d["w"][n]+float(busbar_width))
@@ -31,20 +35,12 @@ def draw():
     else:
         silver_fingers_width = 0.2
     silver_fingers_length = float(width)-float(busbar_width)
-    # scallop = 4.2
-    # Start with a square of 10x10 and apply scallop,
-    # after this adjust the width of scallop: 4,2/((1/fingers_width)*1,25)
 
     # create an object of class Busbar (also used for ptc elements)
     busbar = Busbar(height, width, busbar_width)
 
+    # command you need to run to know position on screen: print(busbar.mouse.position)
     # open coreldraw and create the first line at position (30, 200)
-    print(busbar.mouse.position)
-    print(silver_fingers_width)
-    print(silver_fingers_length)
-
-    # time.sleep(0.5)
-    # busbar.scallop(silver_fingers_width)
     busbar.open_corel()
     busbar.draw_line()
     busbar.adjust_x("30")
@@ -60,11 +56,15 @@ def draw():
             break
 
         if i == 0:
-            xcor = 30+float(busbar_width)/2+margin_W+square_W/2
+            xcor = 30 + float(busbar_width)/2 + margin_W + square_W/2
             busbar.last_ycor = 200 + float(height)/2 - margin_H - square_H/2
             time.sleep(0.4)
-            busbar.adjust_height(str(float(square_H) + 2*float(silver_fingers_width)
-                                     + 0.1 * (float(space_H) - 2*float(silver_fingers_width))))
+            print(xcor)
+            # we make sure there is some overlap of ptc elements and the silver fingers
+            if float(space_H) - 2*float(silver_fingers_width) - 0.4 > 0.5:
+                busbar.adjust_height(str(float(square_H) + 2*float(silver_fingers_width) + 0.6))
+            else:
+                busbar.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.4))
             busbar.adjust_width(str(square_W))
         else:
             xcor = busbar.last_xcor + space_W + square_W

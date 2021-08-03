@@ -1,53 +1,167 @@
 from front_end import Input
 import tkinter as t
-from calculator import calculate, amount_of_squares
+from tkinter import *
+from calculator import calculate, amount_of_elements
 import pandas
 from Visualisation import visual
 from automation import draw
+TEXT_COLOR = "white"
+BG = "#283747"
 
+# setting up graphical user interface
 window = t.Tk()
 window.title("Calculate heater dimensions")
-window.minsize(width=500, height=300)
-window.config(padx=50, pady=50)
+window.minsize(width=800, height=1400)
+window.config(padx=50, pady=50, bg=BG)
 
+# setting up input fields with the help of the Input class, found in folder front_end
 # temp = Input("Temperature [°C]: ", 0, 0)
 # temp.input.focus()
 power = Input("Power [W]: ", 0, 1)
+power.input.focus()
 voltage = Input("Voltage [V]: ", 0, 2)
-width = Input("width [mm]: ", 0, 3)
-height = Input("height [mm]: ", 0, 4)
+width = Input("Width [mm]: ", 0, 3)
+height = Input("Height [mm]: ", 0, 4)
 sheet_busbar = Input("Sheet resistance busbar [ohm/sq/25um]: ", 0, 5)
-sheet_ptc = Input("sheet resistance ptc ink [ohm/sq/25um]: ", 0, 6)
+sheet_ptc = Input("Sheet resistance ptc ink [ohm/sq/25um]: ", 0, 6)
 coat_thickness_ptc = Input("Coat thickness ptc [um]: ", 0, 7)
 coat_thickness_silver = Input("Coat thickness silver [um]: ", 0, 8)
 
+busbar_style = 1
+
+
+def first_busbar(s):
+    global busbar_style
+    canvas1.config(bg="green")
+    canvas2.config(bg=BG)
+    canvas3.config(bg=BG)
+    busbar_style = 1
+
+
+def second_busbar(s):
+    global busbar_style
+    canvas1.config(bg=BG)
+    canvas2.config(bg="green")
+    canvas3.config(bg=BG)
+    busbar_style = 2
+
+
+def third_busbar(s):
+    global busbar_style
+    canvas1.config(bg=BG)
+    canvas2.config(bg=BG)
+    canvas3.config(bg="green")
+    busbar_style = 3
+
+
+canvas1 = t.Canvas(window, width=60, height=60, bg=BG, bd=0, highlightthickness=0)
+canvas1.grid(row=10, column=0, pady=50, padx=70)
+canvas1.create_line(20, 20, 40, 20, fill=TEXT_COLOR)
+canvas1.create_line(20, 20, 20, 40, fill=TEXT_COLOR)
+canvas1.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
+canvas1.bind("<Button-1>", first_busbar)
+
+canvas2 = t.Canvas(window, width=60, height=60, bg=BG, bd=0, highlightthickness=0)
+canvas2.grid(row=10, column=1)
+canvas2.create_line(20, 20, 20, 40, fill=TEXT_COLOR)
+canvas2.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
+canvas2.bind("<Button-1>", second_busbar)
+
+canvas3 = t.Canvas(window, width=60, height=60, bg="#283747", bd=0, highlightthickness=0)
+canvas3.grid(row=10, column=2)
+canvas3.create_line(20, 20, 40, 20, fill=TEXT_COLOR)
+canvas3.create_line(20, 20, 20, 40, fill=TEXT_COLOR)
+canvas3.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
+canvas3.create_line(20, 40, 40, 40, fill=TEXT_COLOR)
+canvas3.bind("<Button-1>", third_busbar)
+
+# used in calculation(), will keep all different coverages generated and their associated aspect ratios
+list_possibilities = []
+
+
+def start_drawing():
+    # display different coverages and aspect ratio belonging with them:
+    termination = t.Label(text="!!!! to terminate automation keep 'space' key pressed until stop !!!!",
+                          font=("Arial", 17), bg=BG, fg=TEXT_COLOR)
+    termination.grid(row=13, column=0, columnspan=3, pady=100)
+
+    doc = pandas.read_csv("select.csv")
+    for number in range(0, len(doc["coverage [%]"])):
+        tup = str(doc['coverage [%]'][number]) + " / " + str(doc["square/aspect-ratio"][number])
+        if tup not in list_possibilities:
+            list_possibilities.append(tup)
+
+    def callback(selection):
+        doc1 = pandas.read_csv("select.csv").transpose().to_dict()
+        sel = selection.split("/")
+        for i in doc1:
+            if doc1[i]["coverage [%]"] == float(sel[0]) and doc1[i]["square/aspect-ratio"] == float(sel[1]):
+                draw(i)
+                break
+
+    # doc1[doc1["coverage [%]"] == selection[0] and doc1["square/aspect-ratio"] == selection[1]]
+    variable = StringVar(window)
+    variable.set("Draw heater with: coverage(%) / square(H/W)")
+
+    document_number = Input("Give row you want to see or choose one from the selection: ", 0, 14)
+    drop = OptionMenu(window, variable, *list_possibilities, command=callback)
+    drop.config(highlightthickness=0, bd=0)
+    drop.grid(row=16, column=1, columnspan=2)
+
+    def written_input():
+        draw(int(document_number.get_input()))
+
+    button1 = t.Button(text="draw written number", command=written_input)
+    button1.grid(row=15, column=2)
+
 
 def calculation():
-    sq = amount_of_squares(power.get_input(), voltage.get_input(), sheet_busbar.get_input(), sheet_ptc.get_input(),
-                           coat_thickness_ptc.get_input(), coat_thickness_silver.get_input())
+    # called upon pressing the button in the GUI. It will generate two csv files.
+    # one with all possibilities and all design rules and another one for selecting the best possibility
+    global list_possibilities, busbar_style
+
+    sq = amount_of_elements(power.get_input(), voltage.get_input(), sheet_busbar.get_input(), sheet_ptc.get_input(),
+                            coat_thickness_ptc.get_input(), coat_thickness_silver.get_input())
     busbar_width.config(text=f"busbar-width: {round(sq[0])} mm")
-    squares.config(text=f"amount of full squares: {round(sq[1])}")
+    squares.config(text=f"amount of ptc elements (aspect ratio of 1): {round(sq[1])}")
+
     response = calculate(height.get_input(), width.get_input(), power.get_input(), voltage.get_input(),
                          sheet_busbar.get_input(), sheet_ptc.get_input(), coat_thickness_ptc.get_input(),
-                         coat_thickness_silver.get_input())
-    pandas.DataFrame(response).transpose().to_csv("answers.csv")
+                         coat_thickness_silver.get_input(), busbar_style)
+
+    # generating a new dictionary for the select.csv file, especially for selecting a solution
+    new_dict = {}
+    for key in response:
+        new_dict[key] = {
+            "coverage [%]": response[key]["coverage [%]"],
+            "amount of ptc elements": response[key]["amount of ptc elements"],
+            "square/aspect-ratio":  response[key]["square/aspect-ratio"],
+        }
+    # sorting the dataframes by the aspect-ratio
+    pandas.DataFrame(response).transpose().sort_values(by=["square/aspect-ratio", "coverage [%]"],
+                                                       ascending=[True, False], ignore_index=True).to_csv("answers.csv")
+    pandas.DataFrame(new_dict).transpose().sort_values(by=["square/aspect-ratio", "coverage [%]"],
+                                                       ascending=[True, False], ignore_index=True).to_csv("select.csv")
+
+    start_drawing()
+
     visual()
 
 
-button = t.Button(text="calculate", command=calculation)
-button.grid(row=9, column=0, columnspan=2, pady=5)
+start = t.PhotoImage(file="start.jpg").subsample(5, 5)
+start2 = t.PhotoImage(file="start2.jpg").subsample(5, 5)
 
-busbar_width = t.Label(text="busbar-width: 0")
-busbar_width.grid(row=10, column=0)
-
-squares = t.Label(text="amount of full squares: 0")
-squares.grid(row=10, column=1)
-
-button = t.Button(text="Draw heater with max coverage", command=draw)
+button = t.Button(image=start, command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
 button.grid(row=11, column=0, columnspan=2, pady=5)
+button = t.Button(image=start2, command=start_drawing, highlightthickness=0, bd=0,  bg=BG,
+                  fg=TEXT_COLOR)
+button.grid(row=11, column=2, pady=5)
 
-termination = t.Label(text="to terminate automation keep 'space' key pressed until stop")
-termination.grid(row=12, column=0, columnspan=2)
+busbar_width = t.Label(text="busbar-width: 0", font=("Arial", 12),  bg=BG, fg=TEXT_COLOR)
+busbar_width.grid(row=12, column=0)
+
+squares = t.Label(text="amount of ptc elements: 0", font=("Arial", 12), bg=BG, fg=TEXT_COLOR)
+squares.grid(row=12, column=2)
 
 
 window.mainloop()

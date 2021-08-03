@@ -17,18 +17,24 @@ class Busbar:
 
     def open_corel(self):
         # also sets up for drawing a line
+        # to adjust: position of coreldraw app on desktop
+        # make sure coreldraw opens on your PC (not separate screen) and it is taking full width/height of the screen
         self.mouse.position = (568, 1059)
         self.mouse.click(Button.left, 2)
         time.sleep(8)
+        # press "new file"
         self.mouse.position = (14, 58)
         self.mouse.click(Button.left, 1)
         time.sleep(2)
+        # press "ok" for settings of new file
         self.mouse.position = (1028, 717)
         self.mouse.click(Button.left, 1)
-        time.sleep(1)
+        time.sleep(2)
+        # presses "freehand tool"
         self.mouse.position = (26, 275)
         self.mouse.click(Button.left, 1)
         time.sleep(1)
+        # presses "2-point line" under "freehand tool"
         self.mouse.position = (69, 289)
         self.mouse.click(Button.left, 1)
         time.sleep(1)
@@ -53,6 +59,7 @@ class Busbar:
         self.mouse.release(Button.left)
 
     def adjust_x(self, x: str):
+        # to adjust: mouse goes to X coordinate (upper left box)
         self.mouse.position = (79, 89)
         time.sleep(0.4)
         self.mouse.click(Button.left, 2)
@@ -66,6 +73,7 @@ class Busbar:
         self.keyboard.release(Key.enter)
 
     def adjust_y(self, y: str):
+        # to adjust: mouse goes to Y coordinate (upper left box)
         self.mouse.position = (83, 104)
         time.sleep(0.4)
         self.mouse.click(Button.left, 2)
@@ -78,6 +86,7 @@ class Busbar:
         self.keyboard.release(Key.enter)
 
     def adjust_height(self, h: str):
+        # to adjust: mouse goes to height setting in upper left corner
         self.mouse.position = (188, 104)
         time.sleep(0.4)
         self.mouse.click(Button.left, 2)
@@ -90,6 +99,7 @@ class Busbar:
         self.keyboard.release(Key.enter)
 
     def adjust_width(self, w: str):
+        # to adjust: change thickness of aline in properties tab
         self.mouse.position = (1605, 234)
         time.sleep(0.4)
         self.mouse.click(Button.left, 2)
@@ -117,6 +127,7 @@ class Busbar:
             self.keyboard.release('v')
 
     def adjust_width_of_non_lines(self, width: str):
+        # to adjust: mouse goes to width settings of an element in upper left corner
         self.mouse.position = (178, 86)
         time.sleep(0.4)
         self.mouse.click(Button.left, 2)
@@ -128,56 +139,11 @@ class Busbar:
         self.keyboard.press(Key.enter)
         self.keyboard.release(Key.enter)
 
-    def scallop(self, fingers_width):
-        scallop = 4.2
-        self.mouse.position = (16, 323)
-        time.sleep(0.2)
-        self.mouse.click(Button.left)
-        time.sleep(0.2)
-        self.mouse.position = (148, 284)
-        self.mouse.press(Button.left)
-        time.sleep(0.5)
-        self.mouse.move(10, 10)
-        time.sleep(0.5)
-        self.mouse.release(Button.left)
-        self.adjust_height("10")
-        self.adjust_width_of_non_lines("10")
-        time.sleep(0.2)
-        self.mouse.position = (1628, 153)
-        self.mouse.click(Button.left, 1)
-        time.sleep(0.5)
-        self.mouse.position = (1630, 208)
-        self.mouse.click(Button.left, 1)
-        time.sleep(0.5)
-        self.mouse.position = (1597, 152)
-        self.mouse.click(Button.left, 1)
-        time.sleep(0.5)
-        self.mouse.position = (1888, 444)
-        self.mouse.click(Button.left, 1)
-        time.sleep(0.5)
-        self.mouse.position = (1663, 242)
-        self.mouse.click(Button.left, 2)
-        self.keyboard.type("4,2")
-        self.keyboard.press(Key.enter)
-        self.keyboard.release(Key.enter)
-        time.sleep(0.5)
-        self.mouse.position = (1887, 264)
-        time.sleep(0.5)
-        self.mouse.click(Button.left, 1)
-        width_height = scallop/((1/fingers_width)*1.25)
-        time.sleep(0.5)
-        self.adjust_height(str(width_height))
-        time.sleep(0.5)
-        self.adjust_width_of_non_lines(str(width_height))
-
-        # Start with a square of 10x10 and apply scallop,
-        # after this adjust the width of scallop: 4,2/((1/fingers_width)*1,25)
-
     def silver_fingers(self, fingers_width, fingers_length: float, squares_height, height: float, margin_H: float,
                        busbar_width: float, square_height, space_height, margin_W):
         self.draw_line_horizontal()
         time.sleep(0.5)
-        self.adjust_width_of_non_lines(str(fingers_length))
+        self.adjust_width_of_non_lines(str(fingers_length-0.5*margin_W))
         time.sleep(0.5)
         self.adjust_width(str(fingers_width))
         time.sleep(0.5)
@@ -189,7 +155,7 @@ class Busbar:
                 break
 
             if i % 2 == 0:
-                x = 30 + fingers_length/2 + busbar_width/2 - 0.5*margin_W
+                x = 30 + fingers_length/2 + busbar_width/2 - 0.6*margin_W
                 if i == 0:
                     ycor_t = 200 + float(height)/2 - margin_H + fingers_width/2
                 else:
@@ -207,7 +173,7 @@ class Busbar:
                 self.adjust_x(str(x))
                 y_top = ycor_t
             else:
-                x = 30 + fingers_length / 2 + (busbar_width / 2) + 0.5*margin_W
+                x = 30 + fingers_length / 2 + (busbar_width / 2) + 0.6*margin_W
                 time.sleep(0.3)
                 with self.keyboard.pressed(Key.ctrl):
                     self.keyboard.press('c')
@@ -224,3 +190,48 @@ class Busbar:
                 self.adjust_y(str(ycor_b))
                 self.adjust_x(str(x))
                 y_bottom = ycor_b
+
+    # def scallop(self, fingers_width):
+    #     scallop = 4.2
+    #     self.mouse.position = (16, 323)
+    #     time.sleep(0.2)
+    #     self.mouse.click(Button.left)
+    #     time.sleep(0.2)
+    #     self.mouse.position = (148, 284)
+    #     self.mouse.press(Button.left)
+    #     time.sleep(0.5)
+    #     self.mouse.move(10, 10)
+    #     time.sleep(0.5)
+    #     self.mouse.release(Button.left)
+    #     self.adjust_height("10")
+    #     self.adjust_width_of_non_lines("10")
+    #     time.sleep(0.2)
+    #     self.mouse.position = (1628, 153)
+    #     self.mouse.click(Button.left, 1)
+    #     time.sleep(0.5)
+    #     self.mouse.position = (1630, 208)
+    #     self.mouse.click(Button.left, 1)
+    #     time.sleep(0.5)
+    #     self.mouse.position = (1597, 152)
+    #     self.mouse.click(Button.left, 1)
+    #     time.sleep(0.5)
+    #     self.mouse.position = (1888, 444)
+    #     self.mouse.click(Button.left, 1)
+    #     time.sleep(0.5)
+    #     self.mouse.position = (1663, 242)
+    #     self.mouse.click(Button.left, 2)
+    #     self.keyboard.type("4,2")
+    #     self.keyboard.press(Key.enter)
+    #     self.keyboard.release(Key.enter)
+    #     time.sleep(0.5)
+    #     self.mouse.position = (1887, 264)
+    #     time.sleep(0.5)
+    #     self.mouse.click(Button.left, 1)
+    #     width_height = scallop/((1/fingers_width)*1.25)
+    #     time.sleep(0.5)
+    #     self.adjust_height(str(width_height))
+    #     time.sleep(0.5)
+    #     self.adjust_width_of_non_lines(str(width_height))
+    #
+    #     # Start with a square of 10x10 and apply scallop,
+    #     # after this adjust the width of scallop: 4,2/((1/fingers_width)*1,25)
