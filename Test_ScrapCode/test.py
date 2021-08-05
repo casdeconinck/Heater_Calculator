@@ -1,4 +1,19 @@
-from autoClass import Busbar
+from drawing_automation.autoClass import Busbar
+l = Busbar(1, 2, 3)
+
+l.open_corel()
+l.draw_line()
+l.got_to_transform_tab()
+l.transform_y_cor("10")
+l.transform_copies("4")
+l.go_back_to_properties_tab()
+#
+# mouse = MouseController()
+# print(mouse.position)
+
+
+
+from drawing_automation.autoClass import Busbar
 import pandas
 import time
 import numpy as np
@@ -17,7 +32,7 @@ import keyboard
 
 def draw(n):
     # reading the csv file we got from our main program
-    d = pandas.read_csv("answers.csv")
+    d = pandas.read_csv("../CSV_files/answers.csv")
     # n = max_coverage(d)[1]
     space_H = d["space_H"][n]
     space_W = d["space_W"][n]
@@ -142,3 +157,56 @@ def draw(n):
     busbar.silver_fingers(silver_fingers_width, float(silver_fingers_length), int(amount_sq_H),
                           float(height), float(margin_H), float(busbar_width), float(square_H), float(space_H),
                           float(margin_W))
+
+    def silver_fingers(self, fingers_width, fingers_length: float, squares_height, height: float, margin_H: float,
+                       busbar_width: float, square_height, space_height, margin_W):
+        self.draw_line_horizontal()
+        time.sleep(0.5)
+        self.adjust_width_of_non_lines(str(fingers_length - 0.5 * margin_W))
+        time.sleep(0.5)
+        self.adjust_width(str(fingers_width))
+        time.sleep(0.5)
+        y_top = 0
+        y_bottom = 0
+        for i in range(0, 2 * squares_height):
+            if keyboard.is_pressed("space"):
+                time.sleep(10)
+                break
+
+            if i % 2 == 0:
+                x = 30 + fingers_length / 2 + busbar_width / 2 - 0.6 * margin_W
+                if i == 0:
+                    ycor_t = 200 + float(height) / 2 - margin_H + fingers_width / 2
+                else:
+                    time.sleep(0.3)
+                    with self.keyboard.pressed(Key.ctrl):
+                        self.keyboard.press('c')
+                        self.keyboard.release('c')
+                    time.sleep(0.3)
+                    with self.keyboard.pressed(Key.ctrl):
+                        self.keyboard.press('v')
+                        self.keyboard.release('v')
+                    time.sleep(0.3)
+                    ycor_t = y_top - square_height - space_height
+                self.adjust_y(str(ycor_t))
+                self.adjust_x(str(x))
+                y_top = ycor_t
+            else:
+                x = 30 + fingers_length / 2 + (busbar_width / 2) + 0.6 * margin_W
+                time.sleep(0.3)
+                with self.keyboard.pressed(Key.ctrl):
+                    self.keyboard.press('c')
+                    self.keyboard.release('c')
+                time.sleep(0.3)
+                with self.keyboard.pressed(Key.ctrl):
+                    self.keyboard.press('v')
+                    self.keyboard.release('v')
+                time.sleep(0.3)
+                if i == 1:
+                    ycor_b = 200 + float(height) / 2 - margin_H - fingers_width / 2 - square_height
+                else:
+                    ycor_b = y_bottom - square_height - space_height
+                self.adjust_y(str(ycor_b))
+                self.adjust_x(str(x))
+                y_bottom = ycor_b
+

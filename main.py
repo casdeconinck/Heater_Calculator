@@ -3,8 +3,8 @@ import tkinter as t
 from tkinter import *
 from calculator import calculate, amount_of_elements
 import pandas
-from Visualisation import visual
-from automation import draw
+from drawing_automation.Visualisation import visual
+from drawing_automation.automation import draw
 TEXT_COLOR = "white"
 BG = "#283747"
 
@@ -85,14 +85,14 @@ def start_drawing():
                           font=("Arial", 17), bg=BG, fg=TEXT_COLOR)
     termination.grid(row=13, column=0, columnspan=3, pady=100)
 
-    doc = pandas.read_csv("select.csv")
+    doc = pandas.read_csv("CSV_files/select.csv")
     for number in range(0, len(doc["coverage [%]"])):
         tup = str(doc['coverage [%]'][number]) + " / " + str(doc["square/aspect-ratio"][number])
         if tup not in list_possibilities:
             list_possibilities.append(tup)
 
     def callback(selection):
-        doc1 = pandas.read_csv("select.csv").transpose().to_dict()
+        doc1 = pandas.read_csv("CSV_files/select.csv").transpose().to_dict()
         sel = selection.split("/")
         for i in doc1:
             if doc1[i]["coverage [%]"] == float(sel[0]) and doc1[i]["square/aspect-ratio"] == float(sel[1]):
@@ -148,8 +148,8 @@ def calculation():
     visual()
 
 
-start = t.PhotoImage(file="start.jpg").subsample(5, 5)
-start2 = t.PhotoImage(file="start2.jpg").subsample(5, 5)
+start = t.PhotoImage(file="images/start.jpg").subsample(5, 5)
+start2 = t.PhotoImage(file="images/start2.jpg").subsample(5, 5)
 
 button = t.Button(image=start, command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
 button.grid(row=11, column=0, columnspan=2, pady=5)

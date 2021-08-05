@@ -1,7 +1,7 @@
 from pynput.mouse import Button, Controller as MouseController
 from pynput.keyboard import Key, Controller as KeyboardController
 import time
-import keyboard
+# import keyboard
 
 
 class Busbar:
@@ -139,57 +139,93 @@ class Busbar:
         self.keyboard.press(Key.enter)
         self.keyboard.release(Key.enter)
 
-    def silver_fingers(self, fingers_width, fingers_length: float, squares_height, height: float, margin_H: float,
-                       busbar_width: float, square_height, space_height, margin_W):
+    def got_to_transform_tab(self):
+        with self.keyboard.pressed(Key.alt):
+            self.keyboard.press(Key.f7)
+        time.sleep(0.4)
+        with self.keyboard.pressed(Key.alt):
+            self.keyboard.press(Key.f7)
+        time.sleep(0.4)
+
+    def transform_x_cor(self, x):
+        self.mouse.position = (1686, 221)
+        time.sleep(0.5)
+        self.mouse.click(Button.left, 2)
+        time.sleep(0.5)
+        new_x = x
+        if "." in x:
+            new_x = x.replace(".", ",")
+        self.keyboard.type(new_x)
+
+    def transform_y_cor(self, y):
+        self.mouse.position = (1686, 250)
+        time.sleep(0.5)
+        self.mouse.click(Button.left, 2)
+        time.sleep(0.5)
+        new_y = y
+        if "." in y:
+            new_y = y.replace(".", ",")
+        self.keyboard.type(new_y)
+
+    def select_everything(self):
+        self.mouse.position = (1402, 290)
+        self.mouse.click(Button.left, 1)
+        with self.keyboard.pressed(Key.ctrl):
+            self.keyboard.press('a')
+            self.keyboard.release('a')
+
+    def transform_copies(self, c):
+        self.mouse.position = (1693, 308)
+        time.sleep(0.8)
+        self.mouse.click(Button.left, 2)
+        time.sleep(0.5)
+        new_c = c
+        if "." in c:
+            new_c = c.replace(".", ",")
+        self.keyboard.type(new_c)
+        self.keyboard.press(Key.enter)
+        self.keyboard.release(Key.enter)
+        time.sleep(5)
+
+    def go_back_to_properties_tab(self):
+        self.mouse.position = (1402, 290)
+        self.mouse.click(Button.left, 1)
+        time.sleep(0.4)
+        with self.keyboard.pressed(Key.alt):
+            self.keyboard.press(Key.enter)
+        time.sleep(0.4)
+        with self.keyboard.pressed(Key.alt):
+            self.keyboard.press(Key.enter)
+        time.sleep(0.4)
+
+    def silver_fingers(self, fingers_width, fingers_length: float, height: float, margin_H: float, busbar_width: float,
+                       square_height, margin_W):
         self.draw_line_horizontal()
         time.sleep(0.5)
         self.adjust_width_of_non_lines(str(fingers_length-0.5*margin_W))
         time.sleep(0.5)
         self.adjust_width(str(fingers_width))
         time.sleep(0.5)
-        y_top = 0
-        y_bottom = 0
-        for i in range(0, 2*squares_height):
-            if keyboard.is_pressed("space"):
-                time.sleep(10)
-                break
 
-            if i % 2 == 0:
-                x = 30 + fingers_length/2 + busbar_width/2 - 0.6*margin_W
-                if i == 0:
-                    ycor_t = 200 + float(height)/2 - margin_H + fingers_width/2
-                else:
-                    time.sleep(0.3)
-                    with self.keyboard.pressed(Key.ctrl):
-                        self.keyboard.press('c')
-                        self.keyboard.release('c')
-                    time.sleep(0.3)
-                    with self.keyboard.pressed(Key.ctrl):
-                        self.keyboard.press('v')
-                        self.keyboard.release('v')
-                    time.sleep(0.3)
-                    ycor_t = y_top - square_height - space_height
-                self.adjust_y(str(ycor_t))
-                self.adjust_x(str(x))
-                y_top = ycor_t
-            else:
-                x = 30 + fingers_length / 2 + (busbar_width / 2) + 0.6*margin_W
-                time.sleep(0.3)
-                with self.keyboard.pressed(Key.ctrl):
-                    self.keyboard.press('c')
-                    self.keyboard.release('c')
-                time.sleep(0.3)
-                with self.keyboard.pressed(Key.ctrl):
-                    self.keyboard.press('v')
-                    self.keyboard.release('v')
-                time.sleep(0.3)
-                if i == 1:
-                    ycor_b = 200 + float(height)/2 - margin_H - fingers_width/2 - square_height
-                else:
-                    ycor_b = y_bottom - square_height - space_height
-                self.adjust_y(str(ycor_b))
-                self.adjust_x(str(x))
-                y_bottom = ycor_b
+        xcor1 = 30 + fingers_length / 2 + busbar_width / 2 - 0.6 * margin_W
+        ycor1 = 200 + float(height) / 2 - margin_H + fingers_width / 2
+        self.adjust_y(str(ycor1))
+        self.adjust_x(str(xcor1))
+
+        xcor2 = 30 + fingers_length / 2 + (busbar_width / 2) + 0.6 * margin_W
+        ycor2 = 200 + float(height) / 2 - margin_H - fingers_width / 2 - square_height
+        with self.keyboard.pressed(Key.ctrl):
+            self.keyboard.press('c')
+            self.keyboard.release('c')
+        time.sleep(0.3)
+        with self.keyboard.pressed(Key.ctrl):
+            self.keyboard.press('v')
+            self.keyboard.release('v')
+        time.sleep(0.3)
+        self.adjust_y(str(ycor2))
+        self.adjust_x(str(xcor2))
+
+
 
     # def scallop(self, fingers_width):
     #     scallop = 4.2

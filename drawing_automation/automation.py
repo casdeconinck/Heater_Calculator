@@ -1,0 +1,111 @@
+from drawing_automation.autoClass import Busbar
+import pandas
+import time
+# import numpy as np
+# from pynput.keyboard import Key
+from pynput.mouse import Button
+# from Visualisation import max_coverage
+# import keyboard
+
+# keep into account before starting automated drawing:
+# keeping space key pressed for a while will terminate the program
+# adjust for personalised coordinates
+# make sure coreldraw opens on full PC (not separate screen)
+# make sure properties tab in corel draw is always open when coreldraw starts
+# make sure everything is in 'mm' also in properties tab!
+
+
+def draw(n):
+    # reading the csv file we got from our main program
+    d = pandas.read_csv("../CSV_files/answers.csv")
+    # n = max_coverage(d)[1]
+    space_H = d["space_H"][n]
+    space_W = d["space_W"][n]
+    square_H = d["square_H"][n]
+    square_W = d["square_W"][n]
+    margin_H = d["margin_H"][n]
+    margin_W = d["margin_W"][n]
+    amount_sq_H = d["amount_sq_H"][n]
+    amount_sq_W = d["amount_sq_W"][n]
+    busbar_width = str(d["busbar_width"][n])
+    height = str(d["h"][n])
+    width = str(d["w"][n]+float(busbar_width))
+    if float(busbar_width)/amount_sq_H >= 0.2:
+        silver_fingers_width = float(busbar_width)/amount_sq_H
+    else:
+        silver_fingers_width = 0.2
+    silver_fingers_length = float(width)-float(busbar_width)
+
+    # create an object of class Busbar (also used for ptc elements)
+    busbar = Busbar(height, width, busbar_width)
+
+    # command you need to run to know position on screen: print(busbar.mouse.position)
+    # open coreldraw and create the first line at position (30, 200)
+    busbar.open_corel()
+    busbar.go_back_to_properties_tab()
+    busbar.draw_line()
+    busbar.adjust_x("30")
+    busbar.adjust_y("200")
+
+    # PTC elements
+    # draw dimensions of first ptc element
+    # we make sure there is some overlap of ptc elements and the silver fingers
+    if float(space_H) - 2 * float(silver_fingers_width) - 0.4 > 0.5:
+        busbar.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.6))
+    else:
+        busbar.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.4))
+    busbar.adjust_width(str(square_W))
+
+    # change coordinates of this element
+    busbar.last_xcor = 30 + float(busbar_width) / 2 + margin_W + square_W / 2
+    busbar.last_ycor = 200 + float(height) / 2 - margin_H - square_H / 2
+    busbar.adjust_x(str(busbar.last_xcor))
+    busbar.adjust_y(str(busbar.last_ycor))
+
+    # first we create one row by transforming this element
+    busbar.got_to_transform_tab()
+    busbar.transform_x_cor(str(space_W+square_W))
+    busbar.transform_y_cor(str(0))
+    busbar.transform_copies(str(amount_sq_W-1))
+    busbar.go_back_to_properties_tab()
+    # make silver fingers
+    busbar.silver_fingers(silver_fingers_width, float(silver_fingers_length), float(height), float(margin_H),
+                          float(busbar_width), float(square_H), float(margin_W))
+
+    # select this row and transform in -y direction
+    busbar.select_everything()
+    busbar.got_to_transform_tab()
+    busbar.transform_y_cor("-"+str(space_H + square_H))
+    busbar.transform_x_cor(str(0))
+    busbar.transform_copies(str(amount_sq_H - 1))
+    busbar.go_back_to_properties_tab()
+
+    # create the busbars
+    busbar.mouse.position = (26, 275)
+    busbar.mouse.click(Button.left, 1)
+    time.sleep(1)
+    busbar.mouse.position = (69, 289)
+    busbar.mouse.click(Button.left, 1)
+    time.sleep(1)
+    time.sleep(0.5)
+    busbar.draw_line()
+    busbar.adjust_x("30")
+    busbar.adjust_y("200")
+    busbar.adjust_height(height)
+    busbar.adjust_width(busbar_width)
+
+    # second busbar
+    busbar.mouse.position = (26, 275)
+    busbar.mouse.click(Button.left, 1)
+    time.sleep(1)
+    busbar.mouse.position = (69, 289)
+    busbar.mouse.click(Button.left, 1)
+    time.sleep(1)
+    time.sleep(0.5)
+    busbar.draw_line()
+    busbar.adjust_x(str(float(width)+30))
+    busbar.adjust_y("200")
+    busbar.adjust_height(height)
+    busbar.adjust_width(busbar_width)
+
+    time.sleep(0.4)

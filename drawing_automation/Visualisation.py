@@ -18,7 +18,7 @@ def visual():
 
     # 200mm equals 2000px (scale). This can be adjusted depending on dimensions of the substrate
     scale = 2000/200
-    d = pandas.read_csv("answers.csv")
+    d = pandas.read_csv("../CSV_files/answers.csv")
     n = max_coverage(d)[1]
     coverage = round((float(max_coverage(d)[0])/(float(d[d.index == n]['h'])*float(d[d.index == n]['w'])))*100)
     print(f"maximal covered area of ptc elements: "
