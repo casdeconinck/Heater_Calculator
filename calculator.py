@@ -86,7 +86,8 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, bu
                                         "busbar_width": round(busbar_width, 3),
                                         "coverage [%]": round(coverage*100),
                                         "amount of ptc elements": real_squares,
-                                        "square/aspect-ratio": round(square_H / square_W, 2)
+                                        "square/aspect-ratio": round(square_H / square_W, 2),
+                                        "power density": 100*p/(h_real*w_real)
                                     }
                                     sol += 1
 

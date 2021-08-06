@@ -1,10 +1,9 @@
 from pynput.mouse import Button, Controller as MouseController
 from pynput.keyboard import Key, Controller as KeyboardController
 import time
-# import keyboard
 
 
-class Busbar:
+class Heater:
 
     def __init__(self, height, width, busbar_width):
         self.height = height
@@ -139,7 +138,7 @@ class Busbar:
         self.keyboard.press(Key.enter)
         self.keyboard.release(Key.enter)
 
-    def got_to_transform_tab(self):
+    def go_to_transform_tab(self):
         with self.keyboard.pressed(Key.alt):
             self.keyboard.press(Key.f7)
         time.sleep(0.4)
@@ -225,49 +224,15 @@ class Busbar:
         self.adjust_y(str(ycor2))
         self.adjust_x(str(xcor2))
 
-
-
-    # def scallop(self, fingers_width):
-    #     scallop = 4.2
-    #     self.mouse.position = (16, 323)
-    #     time.sleep(0.2)
-    #     self.mouse.click(Button.left)
-    #     time.sleep(0.2)
-    #     self.mouse.position = (148, 284)
-    #     self.mouse.press(Button.left)
-    #     time.sleep(0.5)
-    #     self.mouse.move(10, 10)
-    #     time.sleep(0.5)
-    #     self.mouse.release(Button.left)
-    #     self.adjust_height("10")
-    #     self.adjust_width_of_non_lines("10")
-    #     time.sleep(0.2)
-    #     self.mouse.position = (1628, 153)
-    #     self.mouse.click(Button.left, 1)
-    #     time.sleep(0.5)
-    #     self.mouse.position = (1630, 208)
-    #     self.mouse.click(Button.left, 1)
-    #     time.sleep(0.5)
-    #     self.mouse.position = (1597, 152)
-    #     self.mouse.click(Button.left, 1)
-    #     time.sleep(0.5)
-    #     self.mouse.position = (1888, 444)
-    #     self.mouse.click(Button.left, 1)
-    #     time.sleep(0.5)
-    #     self.mouse.position = (1663, 242)
-    #     self.mouse.click(Button.left, 2)
-    #     self.keyboard.type("4,2")
-    #     self.keyboard.press(Key.enter)
-    #     self.keyboard.release(Key.enter)
-    #     time.sleep(0.5)
-    #     self.mouse.position = (1887, 264)
-    #     time.sleep(0.5)
-    #     self.mouse.click(Button.left, 1)
-    #     width_height = scallop/((1/fingers_width)*1.25)
-    #     time.sleep(0.5)
-    #     self.adjust_height(str(width_height))
-    #     time.sleep(0.5)
-    #     self.adjust_width_of_non_lines(str(width_height))
-    #
-    #     # Start with a square of 10x10 and apply scallop,
-    #     # after this adjust the width of scallop: 4,2/((1/fingers_width)*1,25)
+    def create_busbar(self, x: str, height, busbar_width):
+        self.mouse.position = (26, 275)
+        self.mouse.click(Button.left, 1)
+        time.sleep(0.5)
+        self.mouse.position = (69, 289)
+        self.mouse.click(Button.left, 1)
+        time.sleep(0.5)
+        self.draw_line()
+        self.adjust_x(x)
+        self.adjust_y("200")
+        self.adjust_height(height)
+        self.adjust_width(busbar_width)

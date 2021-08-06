@@ -1,9 +1,9 @@
-from drawing_automation.autoClass import Busbar
-l = Busbar(1, 2, 3)
+from drawing_automation.autoClass import Heater
+l = Heater(1, 2, 3)
 
 l.open_corel()
 l.draw_line()
-l.got_to_transform_tab()
+l.go_to_transform_tab()
 l.transform_y_cor("10")
 l.transform_copies("4")
 l.go_back_to_properties_tab()
@@ -13,7 +13,7 @@ l.go_back_to_properties_tab()
 
 
 
-from drawing_automation.autoClass import Busbar
+from drawing_automation.autoClass import Heater
 import pandas
 import time
 import numpy as np
@@ -52,7 +52,7 @@ def draw(n):
     silver_fingers_length = float(width)-float(busbar_width)
 
     # create an object of class Busbar (also used for ptc elements)
-    busbar = Busbar(height, width, busbar_width)
+    busbar = Heater(height, width, busbar_width)
 
     # command you need to run to know position on screen: print(busbar.mouse.position)
     # open coreldraw and create the first line at position (30, 200)

@@ -1,14 +1,7 @@
-from drawing_automation.autoClass import Busbar
+from drawing_automation.autoClass import Heater
 import pandas
-import time
-# import numpy as np
-# from pynput.keyboard import Key
-from pynput.mouse import Button
-# from Visualisation import max_coverage
-# import keyboard
 
 # keep into account before starting automated drawing:
-# keeping space key pressed for a while will terminate the program
 # adjust for personalised coordinates
 # make sure coreldraw opens on full PC (not separate screen)
 # make sure properties tab in corel draw is always open when coreldraw starts
@@ -16,9 +9,10 @@ from pynput.mouse import Button
 
 
 def draw(n):
-    # reading the csv file we got from our main program
-    d = pandas.read_csv("../CSV_files/answers.csv")
-    # n = max_coverage(d)[1]
+
+    # reading the csv file we got from our main program (which triggered calculator.py)
+    d = pandas.read_csv("./CSV_files/answers.csv")
+
     space_H = d["space_H"][n]
     space_W = d["space_W"][n]
     square_H = d["square_H"][n]
@@ -36,76 +30,51 @@ def draw(n):
         silver_fingers_width = 0.2
     silver_fingers_length = float(width)-float(busbar_width)
 
-    # create an object of class Busbar (also used for ptc elements)
-    busbar = Busbar(height, width, busbar_width)
+    # create an object of class Heater (contains steps for drawing in coreldraw)
+    heater = Heater(height, width, busbar_width)
 
-    # command you need to run to know position on screen: print(busbar.mouse.position)
+    # command you need to run to know position on screen: print(heater.mouse.position)
     # open coreldraw and create the first line at position (30, 200)
-    busbar.open_corel()
-    busbar.go_back_to_properties_tab()
-    busbar.draw_line()
-    busbar.adjust_x("30")
-    busbar.adjust_y("200")
+    heater.open_corel()
+    heater.go_back_to_properties_tab()
+    heater.draw_line()
+    heater.adjust_x("30")
+    heater.adjust_y("200")
 
     # PTC elements
     # draw dimensions of first ptc element
     # we make sure there is some overlap of ptc elements and the silver fingers
     if float(space_H) - 2 * float(silver_fingers_width) - 0.4 > 0.5:
-        busbar.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.6))
+        heater.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.6))
     else:
-        busbar.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.4))
-    busbar.adjust_width(str(square_W))
+        heater.adjust_height(str(float(square_H) + 2 * float(silver_fingers_width) + 0.4))
+    heater.adjust_width(str(square_W))
 
     # change coordinates of this element
-    busbar.last_xcor = 30 + float(busbar_width) / 2 + margin_W + square_W / 2
-    busbar.last_ycor = 200 + float(height) / 2 - margin_H - square_H / 2
-    busbar.adjust_x(str(busbar.last_xcor))
-    busbar.adjust_y(str(busbar.last_ycor))
+    heater.last_xcor = 30 + float(busbar_width) / 2 + margin_W + square_W / 2
+    heater.last_ycor = 200 + float(height) / 2 - margin_H - square_H / 2
+    heater.adjust_x(str(heater.last_xcor))
+    heater.adjust_y(str(heater.last_ycor))
 
-    # first we create one row by transforming this element
-    busbar.got_to_transform_tab()
-    busbar.transform_x_cor(str(space_W+square_W))
-    busbar.transform_y_cor(str(0))
-    busbar.transform_copies(str(amount_sq_W-1))
-    busbar.go_back_to_properties_tab()
+    # first we create one row by transforming/copying this element
+    heater.go_to_transform_tab()
+    heater.transform_x_cor(str(space_W+square_W))
+    heater.transform_y_cor("0")
+    heater.transform_copies(str(amount_sq_W-1))
+    heater.go_back_to_properties_tab()
+
     # make silver fingers
-    busbar.silver_fingers(silver_fingers_width, float(silver_fingers_length), float(height), float(margin_H),
+    heater.silver_fingers(silver_fingers_width, float(silver_fingers_length), float(height), float(margin_H),
                           float(busbar_width), float(square_H), float(margin_W))
 
-    # select this row and transform in -y direction
-    busbar.select_everything()
-    busbar.got_to_transform_tab()
-    busbar.transform_y_cor("-"+str(space_H + square_H))
-    busbar.transform_x_cor(str(0))
-    busbar.transform_copies(str(amount_sq_H - 1))
-    busbar.go_back_to_properties_tab()
+    # select this row and transform/copy in -y direction
+    heater.select_everything()
+    heater.go_to_transform_tab()
+    heater.transform_y_cor("-"+str(space_H + square_H))
+    heater.transform_x_cor("0")
+    heater.transform_copies(str(amount_sq_H - 1))
+    heater.go_back_to_properties_tab()
 
     # create the busbars
-    busbar.mouse.position = (26, 275)
-    busbar.mouse.click(Button.left, 1)
-    time.sleep(1)
-    busbar.mouse.position = (69, 289)
-    busbar.mouse.click(Button.left, 1)
-    time.sleep(1)
-    time.sleep(0.5)
-    busbar.draw_line()
-    busbar.adjust_x("30")
-    busbar.adjust_y("200")
-    busbar.adjust_height(height)
-    busbar.adjust_width(busbar_width)
-
-    # second busbar
-    busbar.mouse.position = (26, 275)
-    busbar.mouse.click(Button.left, 1)
-    time.sleep(1)
-    busbar.mouse.position = (69, 289)
-    busbar.mouse.click(Button.left, 1)
-    time.sleep(1)
-    time.sleep(0.5)
-    busbar.draw_line()
-    busbar.adjust_x(str(float(width)+30))
-    busbar.adjust_y("200")
-    busbar.adjust_height(height)
-    busbar.adjust_width(busbar_width)
-
-    time.sleep(0.4)
+    heater.create_busbar("30", height, busbar_width)
+    heater.create_busbar(str(float(width)+30), height, busbar_width)
