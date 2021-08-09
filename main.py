@@ -85,7 +85,7 @@ list_possibilities = []
 
 # This function shows possibilities of answers in the GUI and is responsible for starting the drawing automation
 def start_drawing():
-    termination = t.Label(text="!!!! to terminate automation keep 'space' key pressed until stop !!!!",
+    termination = t.Label(text="!!!! PRESS SPACE TO TERMINATE AUTOMATION !!!!",
                           font=("Arial", 17), bg=BG, fg=TEXT_COLOR)
     termination.grid(row=13, column=0, columnspan=3, pady=100)
 

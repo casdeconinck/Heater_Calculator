@@ -147,20 +147,36 @@ class Heater:
         time.sleep(0.4)
 
     def transform_x_cor(self, x):
-        self.mouse.position = (1686, 221)
+        self.mouse.position = (1689, 221)
         time.sleep(0.5)
         self.mouse.click(Button.left, 2)
-        time.sleep(0.5)
+        time.sleep(0.4)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        self.mouse.click(Button.left, 2)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        time.sleep(0.4)
         new_x = x
         if "." in x:
             new_x = x.replace(".", ",")
         self.keyboard.type(new_x)
 
     def transform_y_cor(self, y):
-        self.mouse.position = (1686, 250)
+        self.mouse.position = (1689, 250)
         time.sleep(0.5)
         self.mouse.click(Button.left, 2)
         time.sleep(0.5)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        self.mouse.click(Button.left, 2)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        time.sleep(0.4)
         new_y = y
         if "." in y:
             new_y = y.replace(".", ",")
@@ -178,6 +194,11 @@ class Heater:
         time.sleep(0.8)
         self.mouse.click(Button.left, 2)
         time.sleep(0.5)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        self.keyboard.press(Key.backspace)
+        self.keyboard.release(Key.backspace)
+        time.sleep(0.4)
         new_c = c
         if "." in c:
             new_c = c.replace(".", ",")
