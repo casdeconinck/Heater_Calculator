@@ -30,6 +30,20 @@ coat_thickness_ptc = Input("Coat thickness ptc [um]: ", 0, 7)
 coat_thickness_silver = Input("Coat thickness silver [um]: ", 0, 8)
 min_finger_width = Input("minimal silver fingers width [mm]: ", 0, 9)
 
+
+# function for the pop up window that asks if you are sure to draw the selected item:
+def popup_window(i):
+    popup = t.Tk()
+    popup.minsize(width=400, height=200)
+    popup.wm_title("Your chosen settings")
+    label = t.Label(popup, text="do you want to continue?\n\nYou can stop the program any\n"
+                                "time by pressing the space key", font=("Arial", 15))
+    label.pack(side="top", fill="x", pady=10)
+    B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw(i)])
+    B1.pack()
+    popup.mainloop()
+
+
 # change color of busbar button when a certain style is picked in the GUI
 busbar_style = 1
 choose_busbar = t.Label(text="choose your busbar configuration:",
@@ -108,7 +122,8 @@ def start_drawing():
             # we check the csv file with all answers for the row number that matches our selection
             if doc1[i]["coverage [%]"] == float(sel[0]) and doc1[i]["square/aspect-ratio"] == float(sel[1]):
                 # start drawing automation of the selection
-                draw(i)
+                popup_window(i)
+                # draw(i)
                 break
 
     # displays on the drop down menu in the GUI
@@ -132,7 +147,7 @@ def start_drawing():
         value = row_input.get()
         if "," in value:
             value = value.replace(",", ".")
-        draw(int(value))
+        popup_window(int(value))
 
     # button to trigger written_input() function
     button1 = t.Button(text="draw this row number", command=written_input)
