@@ -28,12 +28,16 @@ sheet_busbar = Input("Sheet resistance busbar [ohm/sq/25um]: ", 0, 5)
 sheet_ptc = Input("Sheet resistance ptc ink [ohm/sq/25um]: ", 0, 6)
 coat_thickness_ptc = Input("Coat thickness ptc [um]: ", 0, 7)
 coat_thickness_silver = Input("Coat thickness silver [um]: ", 0, 8)
+min_finger_width = Input("minimal silver fingers width [mm]: ", 0, 9)
 
 # change color of busbar button when a certain style is picked in the GUI
 busbar_style = 1
+choose_busbar = t.Label(text="choose your busbar configuration:",
+                        font=("Arial", 12), bg=BG, fg=TEXT_COLOR)
+choose_busbar.grid(row=10, column=0, columnspan=3, pady=(20, 0))
 
 
-def first_busbar(s):
+def first_busbar(_s):
     global busbar_style
     canvas1.config(bg="green")
     canvas2.config(bg=BG)
@@ -41,7 +45,7 @@ def first_busbar(s):
     busbar_style = 1
 
 
-def second_busbar(s):
+def second_busbar(_s):
     global busbar_style
     canvas1.config(bg=BG)
     canvas2.config(bg="green")
@@ -49,7 +53,7 @@ def second_busbar(s):
     busbar_style = 2
 
 
-def third_busbar(s):
+def third_busbar(_s):
     global busbar_style
     canvas1.config(bg=BG)
     canvas2.config(bg=BG)
@@ -59,22 +63,22 @@ def third_busbar(s):
 
 # draw busbar styles in GUI
 canvas1 = t.Canvas(window, width=60, height=60, bg=BG, bd=0, highlightthickness=0)
-canvas1.grid(row=10, column=0, pady=50, padx=70)
+canvas1.grid(row=11, column=0, pady=(5, 30), padx=70)
 canvas1.create_line(20, 20, 40, 20, fill=TEXT_COLOR)
 canvas1.create_line(20, 20, 20, 40, fill="red")
 canvas1.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
 canvas1.bind("<Button-1>", first_busbar)
 
 canvas2 = t.Canvas(window, width=60, height=60, bg=BG, bd=0, highlightthickness=0)
-canvas2.grid(row=10, column=1)
+canvas2.grid(row=11, column=1, pady=(5, 30))
 canvas2.create_line(20, 20, 20, 40, fill="red")
 canvas2.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
 canvas2.bind("<Button-1>", second_busbar)
 
 canvas3 = t.Canvas(window, width=60, height=60, bg="#283747", bd=0, highlightthickness=0)
-canvas3.grid(row=10, column=2)
-canvas3.create_line(20, 20, 40, 20, fill=TEXT_COLOR)
-canvas3.create_line(20, 20, 20, 40, fill=TEXT_COLOR)
+canvas3.grid(row=11, column=2, pady=(5, 30))
+canvas3.create_line(20, 20, 40, 20, fill="red")
+canvas3.create_line(20, 20, 20, 40, fill="red")
 canvas3.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
 canvas3.create_line(20, 40, 40, 40, fill=TEXT_COLOR)
 canvas3.bind("<Button-1>", third_busbar)
@@ -87,7 +91,7 @@ list_possibilities = []
 def start_drawing():
     termination = t.Label(text="!!!! PRESS SPACE TO TERMINATE AUTOMATION !!!!",
                           font=("Arial", 17), bg=BG, fg=TEXT_COLOR)
-    termination.grid(row=13, column=0, columnspan=3, pady=100)
+    termination.grid(row=17, column=0, columnspan=3, pady=(40, 35))
 
     # display different coverages and aspect ratio belonging with them:
     doc = pandas.read_csv("CSV_files/select.csv")
@@ -112,18 +116,27 @@ def start_drawing():
     variable.set("Draw heater with: coverage(%) / square(H/W)")
 
     # Input field if you want to choose a row out of the solutions yourself
-    document_number = Input("Give row you want to see or choose one from the selection: ", 0, 14)
+    choose_row = t.Label(text="Choose a heater configuration to draw or give in the row you want to draw.",
+                         font=("Arial", 12), bg=BG, fg=TEXT_COLOR)
+    choose_row.grid(row=14, column=0, columnspan=3, pady=(50, 0))
+
     drop = OptionMenu(window, variable, *list_possibilities, command=callback)
     drop.config(highlightthickness=0, bd=0)
-    drop.grid(row=16, column=1, columnspan=2)
+    drop.grid(row=15, column=0, columnspan=3, pady=(10, 10))
+
+    row_input = t.Entry()
+    row_input.grid(column=0, row=16, ipadx=20, ipady=5, padx=(190, 0), pady=5)
 
     # starts drawing of the row you've written in the input field
     def written_input():
-        draw(int(document_number.get_input()))
+        value = row_input.get()
+        if "," in value:
+            value = value.replace(",", ".")
+        draw(int(value))
 
     # button to trigger written_input() function
-    button1 = t.Button(text="draw written number", command=written_input)
-    button1.grid(row=15, column=2)
+    button1 = t.Button(text="draw this row number", command=written_input)
+    button1.grid(row=16, column=2, padx=(0, 190), pady=5)
 
 
 # this function is responsible for starting the calculation (calculator.py)
@@ -139,7 +152,7 @@ def calculation():
 
     response = calculate(height.get_input(), width.get_input(), power.get_input(), voltage.get_input(),
                          sheet_busbar.get_input(), sheet_ptc.get_input(), coat_thickness_ptc.get_input(),
-                         coat_thickness_silver.get_input(), busbar_style)
+                         coat_thickness_silver.get_input(), busbar_style, min_finger_width.get_input())
 
     # generating a new dictionary for the select.csv file, especially for selecting a solution
     new_dict = {}
@@ -168,16 +181,16 @@ start = t.PhotoImage(file="images/start.jpg").subsample(5, 5)
 start2 = t.PhotoImage(file="images/start2.jpg").subsample(5, 5)
 
 button = t.Button(image=start, command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
-button.grid(row=11, column=0, columnspan=2, pady=5)
+button.grid(row=12, column=0, columnspan=2, pady=5)
 button = t.Button(image=start2, command=start_drawing, highlightthickness=0, bd=0,  bg=BG,
                   fg=TEXT_COLOR)
-button.grid(row=11, column=2, pady=5)
+button.grid(row=12, column=2, pady=5)
 
 busbar_width = t.Label(text="busbar-width: 0", font=("Arial", 12),  bg=BG, fg=TEXT_COLOR)
-busbar_width.grid(row=12, column=0)
+busbar_width.grid(row=13, column=0)
 
 squares = t.Label(text="amount of ptc elements: 0", font=("Arial", 12), bg=BG, fg=TEXT_COLOR)
-squares.grid(row=12, column=2)
+squares.grid(row=13, column=2)
 
 
 window.mainloop()

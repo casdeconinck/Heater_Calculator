@@ -4,17 +4,16 @@ import os
 from pynput import keyboard
 from pynput.keyboard import Key
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # keep into account before starting automated drawing:
 # adjust for personalised coordinates
 # make sure coreldraw opens on full PC (not separate screen)
-# make sure properties tab in corel draw is always open when coreldraw starts
 # make sure everything is in 'mm' also in properties tab!
 
 
 def draw(n):
 
-    # safety to stop function
+    # safety to stop automation when pressing "space"!!!!
     def on_press(key):
         if key == Key.space:
             os._exit(0)
@@ -32,12 +31,13 @@ def draw(n):
         amount_sq_H = d["amount_sq_H"][n]
         amount_sq_W = d["amount_sq_W"][n]
         busbar_width = str(d["busbar_width"][n])
+        min_finger_width = d["min_finger_width"][n]
         height = str(d["h"][n])
         width = str(d["w"][n]+float(busbar_width))
-        if float(busbar_width)/amount_sq_H >= 0.2:
+        if float(busbar_width)/amount_sq_H >= min_finger_width:
             silver_fingers_width = float(busbar_width)/amount_sq_H
         else:
-            silver_fingers_width = 0.2
+            silver_fingers_width = min_finger_width
         silver_fingers_length = float(width)-float(busbar_width)
 
         # create an object of class Heater (contains steps for drawing in coreldraw)

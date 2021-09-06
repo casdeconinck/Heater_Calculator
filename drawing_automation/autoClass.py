@@ -98,7 +98,7 @@ class Heater:
         self.keyboard.release(Key.enter)
 
     def adjust_width(self, w: str):
-        # to adjust: change thickness of aline in properties tab
+        # to adjust: change thickness of a line in properties tab
         self.mouse.position = (1605, 234)
         time.sleep(0.4)
         self.mouse.click(Button.left, 2)

@@ -6,11 +6,11 @@ import time
 def max_coverage(file):
     maximum = 0
     index = 0
-    for l in range(0, len(file["square_W"])):
-        m = file["square_W"][l]*file["square_H"][l]*file["amount_sq_H"][l]*file["amount_sq_W"][l]
+    for row in range(0, len(file["square_W"])):
+        m = file["square_W"][row]*file["square_H"][row]*file["amount_sq_H"][row]*file["amount_sq_W"][row]
         if m > maximum:
             maximum = m
-            index = l
+            index = row
     return [maximum, index]
 
 

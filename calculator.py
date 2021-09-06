@@ -17,7 +17,7 @@ def amount_of_elements(p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver)
     return [busbar_width, amount_ptc_elements]
 
 
-def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, busbar_style):
+def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, busbar_style, min_finger_width):
     # dictionary where we will store design parameters that fulfill the heater specs
     solutions = {}
     sol = 0
@@ -50,11 +50,11 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, bu
             # loop through possibilities for width and height of separate ptc elements and space between these elements
             for square_W in np.arange(0.5, 7, 0.2):
 
-                for space_W in np.arange(0.3, 5, 0.3):
+                for space_W in np.arange(0.4, 5, 0.2):
 
                     for square_H in np.arange(0.5, 7, 0.2):
 
-                        for space_H in np.arange(0.3, 5, 0.3):
+                        for space_H in np.arange(0.4, 5, 0.2):
 
                             # the amount of squares depend on the width and height of the squares:
                             real_squares = round(square_H / square_W * elements)
@@ -68,7 +68,8 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, bu
                                 # silver fingers are min 0,2 mm width, min 0,3 mm between overlapping ptc elements
                                 # 0,2-0,3 overlap of elements over silver fingers
                                 if amount_sq_H*amount_sq_W == real_squares and coverage >= 0.3 and \
-                                        space_H - 2*(busbar_width/amount_sq_H) > 0.7 and space_H - 0.8 > 0.3 and \
+                                        space_H - 2*(busbar_width/amount_sq_H) > 0.7 and space_H - \
+                                        (0.4 + 2*min_finger_width) > 0.3 and \
                                         amount_sq_W*square_W + (amount_sq_W-1)*space_W + 2*margin_W <= w_real and \
                                         amount_sq_H*square_H + (amount_sq_H-1)*space_H + 2*margin_H <= h_real:
                                     solutions[f"{sol}"] = {
@@ -87,7 +88,8 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, bu
                                         "coverage [%]": round(coverage*100),
                                         "amount of ptc elements": real_squares,
                                         "square/aspect-ratio": round(square_H / square_W, 2),
-                                        "power density": 100*p/(h_real*w_real)
+                                        "power density": 100*p/(h_real*w_real),
+                                        "min_finger_width": min_finger_width
                                     }
                                     sol += 1
 
