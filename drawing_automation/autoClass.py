@@ -146,7 +146,7 @@ class Heater:
             self.keyboard.press(Key.f7)
         time.sleep(0.4)
 
-    def transform_x_cor(self, x):
+    def transform_x_cor(self, x: str):
         self.mouse.position = (1689, 221)
         time.sleep(0.5)
         self.mouse.click(Button.left, 2)
@@ -205,7 +205,7 @@ class Heater:
         self.keyboard.type(new_c)
         self.keyboard.press(Key.enter)
         self.keyboard.release(Key.enter)
-        time.sleep(5)
+        time.sleep(1)
 
     def go_back_to_properties_tab(self):
         self.mouse.position = (1402, 290)

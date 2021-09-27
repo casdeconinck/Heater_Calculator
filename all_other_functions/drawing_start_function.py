@@ -7,7 +7,7 @@ list_possibilities = []
 
 
 # This function shows possibilities of answers in the GUI and is responsible for starting the drawing automation
-def start_drawing(window, BG, TEXT_COLOR):
+def start_drawing(window, BG, TEXT_COLOR, irregular, PATH):
     # display different coverages and aspect ratio belonging with them:
     doc = pandas.read_csv("././CSV_files/select.csv")
     for number in range(0, len(doc["coverage [%]"])):
@@ -23,7 +23,7 @@ def start_drawing(window, BG, TEXT_COLOR):
             # we check the csv file with all answers for the row number that matches our selection
             if doc1[i]["coverage [%]"] == float(sel[0]) and doc1[i]["square/aspect-ratio"] == float(sel[1]):
                 # start drawing automation of the selection
-                popup_window(i)
+                popup_window(i, irregular, PATH)
                 break
 
     # displays on the drop down menu in the GUI
@@ -47,7 +47,7 @@ def start_drawing(window, BG, TEXT_COLOR):
         value = row_input.get()
         if "," in value:
             value = value.replace(",", ".")
-        popup_window(int(value))
+        popup_window(int(value), irregular, PATH)
 
     # button to trigger written_input() function
     button1 = Button(text="draw this row number", command=written_input)

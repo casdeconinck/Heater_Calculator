@@ -1,6 +1,7 @@
 import requests
 import tkinter as t
 from drawing_automation.automation import draw
+from drawing_automation.draw_irregular_shape import draw_irregular
 busbar_style = 1
 BG = "#283747"
 
@@ -14,15 +15,19 @@ def get_database_info(ink: str):
             return i
 
 
-def popup_window(i):
+def popup_window(i, irregular, PATH):
     popup = t.Tk()
     popup.minsize(width=400, height=200)
     popup.wm_title("Your chosen settings")
     label = t.Label(popup, text="do you want to continue?\n\nYou can stop the program any\n"
                                 "time by pressing the space key", font=("Arial", 15))
     label.pack(side="top", fill="x", pady=10)
-    B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw(i)])
-    B1.pack()
+    if irregular:
+        B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw_irregular(i, PATH)])
+        B1.pack()
+    else:
+        B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw(i)])
+        B1.pack()
     popup.mainloop()
 
 

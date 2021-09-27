@@ -15,6 +15,10 @@ class Input:
             value = value.replace(",", ".")
         return float(value)
 
+    def remove(self):
+        self.label.grid_remove()
+        self.input.grid_remove()
+
 
 # ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DropdownMenu:
