@@ -1,23 +1,19 @@
 from drawing_automation.autoClass import Heater
 import pandas
-import os
 from pynput import keyboard
-from pynput.keyboard import Key
+from all_other_functions.irregular_shape_other_functions import on_press
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # keep into account before starting automated drawing:
 # adjust for personalised coordinates
 # make sure coreldraw opens on full PC (not separate screen)
-# make sure everything is in 'mm' also in properties tab!
+# make sure everything is in 'mm' also in properties tab!!!!!
 
 
 def draw(n):
-
-    # safety to stop automation when pressing "space"!!!!
-    def on_press(key):
-        if key == Key.space:
-            os._exit(0)
-
+    """This functions reads out the values in the csv file from given row 'n'. This function is only called upon
+    if the user indicated that the wanted heater is a rectangle. It will then use the autoClass to start
+    an automation of the mouse and keyboard."""
     with keyboard.Listener(on_press=on_press, suppress=False) as listener:
         # reading the csv file we got from our main program (which triggered calculator.py)
         d = pandas.read_csv("./CSV_files/answers.csv")

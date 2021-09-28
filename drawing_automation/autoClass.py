@@ -219,7 +219,7 @@ class Heater:
         time.sleep(0.4)
 
     def silver_fingers(self, fingers_width, fingers_length: float, height: float, margin_H: float, busbar_width: float,
-                       square_height, margin_W):
+                       square_height, margin_W, x_start=30, y_start=200):
         self.draw_line_horizontal()
         time.sleep(0.5)
         self.adjust_width_of_non_lines(str(fingers_length-0.5*margin_W))
@@ -227,13 +227,13 @@ class Heater:
         self.adjust_width(str(fingers_width))
         time.sleep(0.5)
 
-        xcor1 = 30 + fingers_length / 2 + busbar_width / 2 - 0.6 * margin_W
-        ycor1 = 200 + float(height) / 2 - margin_H + fingers_width / 2
+        xcor1 = x_start + fingers_length / 2 + busbar_width / 2 - 0.4 * margin_W
+        ycor1 = y_start + float(height) / 2 - margin_H + fingers_width / 2
         self.adjust_y(str(ycor1))
         self.adjust_x(str(xcor1))
 
-        xcor2 = 30 + fingers_length / 2 + (busbar_width / 2) + 0.6 * margin_W
-        ycor2 = 200 + float(height) / 2 - margin_H - fingers_width / 2 - square_height
+        xcor2 = x_start + fingers_length / 2 + (busbar_width / 2) + 0.4 * margin_W
+        ycor2 = y_start + float(height) / 2 - margin_H - fingers_width / 2 - square_height
         with self.keyboard.pressed(Key.ctrl):
             self.keyboard.press('c')
             self.keyboard.release('c')

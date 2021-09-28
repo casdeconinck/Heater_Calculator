@@ -7,6 +7,8 @@ BG = "#283747"
 
 
 def get_database_info(ink: str):
+    """ sends a get request to google sheets, where the info about the ptc ink resides,
+    it returns an array with the answers of the selected ink """
     endpoint = "https://api.sheety.co/d4ae87c445d7036d0d836aa0d701312e/ptc/blad1"
     response = requests.get(endpoint).json()["blad1"]
     for i in response:
@@ -16,6 +18,8 @@ def get_database_info(ink: str):
 
 
 def popup_window(i, irregular, PATH):
+    """gives a pop-up window to ask if you are sure to start the drawing automation,
+    If yes it will start the appropriate automation for a rectangle or an irregular shape"""
     popup = t.Tk()
     popup.minsize(width=400, height=200)
     popup.wm_title("Your chosen settings")
@@ -32,6 +36,8 @@ def popup_window(i, irregular, PATH):
 
 
 def busbar_styles(window, TEXT_COLOR):
+    """Responsible for drawing the 3 busbar configurations in the GUI. And it will also change the value of
+     busbar style once it is clicked"""
     choose_busbar = t.Label(text="choose your busbar configuration:",
                             font=("Arial", 12), bg=BG, fg=TEXT_COLOR)
     choose_busbar.grid(row=10, column=0, columnspan=3, pady=(20, 0))

@@ -8,6 +8,9 @@ list_possibilities = []
 
 # This function shows possibilities of answers in the GUI and is responsible for starting the drawing automation
 def start_drawing(window, BG, TEXT_COLOR, irregular, PATH):
+    """This function shows the aspect ratio and coverage that was found with the calculation in the GUI.
+    It allows to select a possibility or to write down a row of the csv file you want to draw.
+    Upon clicking on it it will start the automation, after showing a pop-up window (see 'other_functions')"""
     # display different coverages and aspect ratio belonging with them:
     doc = pandas.read_csv("././CSV_files/select.csv")
     for number in range(0, len(doc["coverage [%]"])):
