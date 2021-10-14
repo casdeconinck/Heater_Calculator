@@ -125,6 +125,15 @@ class Heater:
             self.keyboard.press('v')
             self.keyboard.release('v')
 
+    def copy_paste_previous_element(self):
+        with self.keyboard.pressed(Key.ctrl):
+            self.keyboard.press('c')
+            self.keyboard.release('c')
+        time.sleep(0.5)
+        with self.keyboard.pressed(Key.ctrl):
+            self.keyboard.press('v')
+            self.keyboard.release('v')
+
     def adjust_width_of_non_lines(self, width: str):
         # to adjust: mouse goes to width settings of an element in upper left corner
         self.mouse.position = (178, 86)

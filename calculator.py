@@ -68,8 +68,8 @@ def calculate(h, w, p, v, busbar_sheet_r, ptc_sheet_r, coat_ptc, coat_silver, bu
                                 # silver fingers are min 0,2 mm width, min 0,3 mm between overlapping ptc elements
                                 # 0,2-0,3 overlap of elements over silver fingers
                                 if amount_sq_H*amount_sq_W == real_squares and coverage >= 0.3 and \
-                                        space_H - 2*(busbar_width/amount_sq_H) > 0.7 and space_H - \
-                                        (0.4 + 2*min_finger_width) > 0.3 and \
+                                        space_H - 2*(busbar_width/amount_sq_H) > 0.8 and space_H - \
+                                        (0.4 + 2*min_finger_width) > 0.4 and \
                                         amount_sq_W*square_W + (amount_sq_W-1)*space_W + 2*margin_W <= w_real and \
                                         amount_sq_H*square_H + (amount_sq_H-1)*space_H + 2*margin_H <= h_real:
                                     solutions[f"{sol}"] = {

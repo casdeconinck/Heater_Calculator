@@ -2,19 +2,27 @@ import requests
 import tkinter as t
 from drawing_automation.automation import draw
 from drawing_automation.draw_irregular_shape import draw_irregular
+import sys
+import os
 busbar_style = 1
 BG = "#283747"
 
 
-def get_database_info(ink: str):
+def get_database(blad):
     """ sends a get request to google sheets, where the info about the ptc ink resides,
     it returns an array with the answers of the selected ink """
-    endpoint = "https://api.sheety.co/d4ae87c445d7036d0d836aa0d701312e/ptc/blad1"
-    response = requests.get(endpoint).json()["blad1"]
-    for i in response:
+    endpoint = "https://api.sheety.co/d4ae87c445d7036d0d836aa0d701312e/ptc/"+blad
+    response = requests.get(endpoint).json()[blad]
+    return response
+
+
+def get_database_info(data, ink: str):
+    """ sends a get request to google sheets, where the info about the ptc ink resides,
+    it returns an array with the answers of the selected ink """
+    for i in data:
         if i["ink"] == ink:
-            print(i)
             return i
+
 
 
 def popup_window(i, irregular, PATH):
@@ -84,3 +92,11 @@ def busbar_styles(window, TEXT_COLOR):
     canvas3.create_line(40, 20, 40, 40, fill=TEXT_COLOR)
     canvas3.create_line(20, 40, 40, 40, fill=TEXT_COLOR)
     canvas3.bind("<Button-1>", third_busbar)
+
+
+def restart_program():
+    """Restarts the current program.
+    Note: this function does not return. Any cleanup action (like
+    saving data) must be done before calling this function."""
+    python = sys.executable
+    os.execl(python, python, * sys.argv)

@@ -33,7 +33,7 @@ class DropdownMenu:
 
         self.drop = t.OptionMenu(window, self.variable, *list_possibilities, command=self.get_dropdown_value)
         self.drop.config(highlightthickness=0, bd=0)
-        self.drop.grid(row=row, column=col+2)
+        self.drop.grid(row=row, column=col+2, pady=5)
         self.chosen_value = ""
 
     def get_dropdown_value(self, selection):
