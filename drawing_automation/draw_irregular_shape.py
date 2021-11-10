@@ -4,6 +4,7 @@ from pynput import keyboard
 from all_other_functions.irregular_shape_other_functions import *
 import pandas
 import tkinter as t
+from all_other_functions.no_options_class import NoOptions
 
 
 def draw_irregular_in_corel(solution, h_mm, w_mm, min_finger_width):
@@ -38,7 +39,7 @@ def draw_irregular_in_corel(solution, h_mm, w_mm, min_finger_width):
     listener.join()
 
 
-def draw_irregular(n, PATH):
+def draw_irregular(n, PATH, window_to_close):
     d = pandas.read_csv("././CSV_files/answers.csv")
 
     spacing_H = float(d["space_H"][n])
@@ -59,21 +60,24 @@ def draw_irregular(n, PATH):
     matrix = get_matrix(h_pix, w_pix, image)
     matrix = matrix[~np.all(matrix == 0, axis=1)]
     matrix_rows, matrix_columns = matrix.shape
-
-    solution = loop_trough_possibilities(amount, margin_H, margin_W, square_H_calculated, square_W, spacing_W,
-                                         spacing_H, busbar_width, min_finger_width, matrix, matrix_rows)
+    # solution = loop_trough_possibilities(amount, margin_H, margin_W, square_H_calculated, square_W, spacing_W,
+    #                                      spacing_H, busbar_width, min_finger_width, matrix, matrix_rows)
+    options = NoOptions(amount, margin_H, margin_W, square_H_calculated, square_W, spacing_W,
+                        spacing_H, busbar_width, min_finger_width, matrix, matrix_rows)
+    solution = loop_trough_possibilities(options, window_to_close)
     amount_of_keys = len(solution.keys()) - 1
 
     if busbar_width / amount_of_keys > min_finger_width:
         min_finger_width = busbar_width / amount_of_keys
 
-    popup = t.Tk()
-    popup.minsize(width=400, height=200)
-    popup.wm_title("Your chosen settings")
-    label = t.Label(popup, text="do you want to continue?\n\nYou can stop the program any\n"
+    popup1 = t.Tk()
+    popup1.minsize(width=400, height=200)
+    popup1.wm_title("Your chosen settings")
+    label = t.Label(popup1, text="do you want to continue?\n\nYou can stop the program any\n"
                                 "time by pressing the space key", font=("Arial", 15))
     label.pack(side="top", fill="x", pady=10)
 
-    B1 = t.Button(popup, text="Continue", command=lambda: [
-        popup.destroy(), draw_irregular_in_corel(solution, h_mm, w_mm, min_finger_width)])
+    B1 = t.Button(popup1, text="Continue", command=lambda: [
+        popup1.destroy(), draw_irregular_in_corel(solution, h_mm, w_mm, min_finger_width)])
     B1.pack()
+    popup1.mainloop()

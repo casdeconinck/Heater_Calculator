@@ -24,8 +24,7 @@ def get_database_info(data, ink: str):
             return i
 
 
-
-def popup_window(i, irregular, PATH):
+def popup_window(i, irregular, window_to_close, PATH=""):
     """gives a pop-up window to ask if you are sure to start the drawing automation,
     If yes it will start the appropriate automation for a rectangle or an irregular shape"""
     popup = t.Tk()
@@ -35,7 +34,7 @@ def popup_window(i, irregular, PATH):
                                 "time by pressing the space key", font=("Arial", 15))
     label.pack(side="top", fill="x", pady=10)
     if irregular:
-        B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw_irregular(i, PATH)])
+        B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw_irregular(i, PATH, window_to_close)])
         B1.pack()
     else:
         B1 = t.Button(popup, text="Continue", command=lambda: [popup.destroy(), draw(i)])

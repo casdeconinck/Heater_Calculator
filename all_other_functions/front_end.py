@@ -4,10 +4,10 @@ from tkinter import *
 
 class Input:
     """This class creates a label and an input field next to each other"""
-    def __init__(self, text, col, row, span=2):
-        self.label = t.Label(text=text, font=("Arial", 10), bg="#283747", fg="white")
+    def __init__(self, text, col, row, window_name, span=2):
+        self.label = t.Label(window_name, text=text, font=("Arial", 10), bg="#283747", fg="white")
         self.label.grid(column=col, row=row, columnspan=span)
-        self.input = t.Entry()
+        self.input = t.Entry(window_name)
         self.input.grid(column=col+2, row=row, ipadx=20, ipady=5, padx=5, pady=5)
 
     def get_input(self):

@@ -52,16 +52,16 @@ def not_rectangle():
 
 
 # setting up input fields with the help of the Input class, found in folder front_end
-power = Input("Power [W]: ", 0, 1)
+power = Input("Power [W]: ", 0, 1, window)
 power.input.focus()
-voltage = Input("Voltage [V]: ", 0, 2)
+voltage = Input("Voltage [V]: ", 0, 2, window)
 # sheet_busbar = Input("Sheet resistance busbar [ohm/sq/25um]: ", 0, 3)
 ptc_ink = DropdownMenu([i["ink"] for i in ptc_info], window, "select one", "PTC ink:", 0, 4)
 silver_ink = DropdownMenu([i["ink"] for i in silver_info], window, "select one", "silver ink:", 0, 5)
 rectangle = t.Checkbutton(window, text="Irregular shape", command=not_rectangle)
 rectangle.grid(column=4, row=8)
-width = Input("Width [mm]: ", 0, 8)
-height = Input("Height [mm]: ", 0, 9)
+width = Input("Width [mm]: ", 0, 8, window)
+height = Input("Height [mm]: ", 0, 9, window)
 
 
 # different busbar styles, function can be found in the file all_other_functions.py
@@ -117,7 +117,7 @@ def calculation():
                                                        ascending=[True, False], ignore_index=True)\
         .to_csv("CSV_files/select.csv")
 
-    start_drawing(window, BG, TEXT_COLOR, irregular, PATH)
+    start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window)
     # gives a first visualisation drawn with turtle library
     # visual()
 
@@ -129,7 +129,7 @@ start2 = t.PhotoImage(file="images/start2.jpg").subsample(5, 5)
 button = t.Button(image=start, command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
 button.grid(row=12, column=0, columnspan=2, pady=5)
 
-button = t.Button(image=start2, command=lambda: start_drawing(window, BG, TEXT_COLOR, irregular, PATH),
+button = t.Button(image=start2, command=lambda: start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window),
                   highlightthickness=0, bd=0,
                   bg=BG, fg=TEXT_COLOR)
 button.grid(row=12, column=2, pady=5)
