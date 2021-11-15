@@ -111,9 +111,9 @@ def calculate_amount_of_elements(margin_H, margin_W, square_H, square_W, spacing
     if busbar_width / (height / (square_H + spacing_H)) > min_finger_width:
         min_finger_width = busbar_width / (height / (square_H + spacing_H))
 
-    while index + pixelate(square_H + margin_H + spacing_H) < matrix_rows:
+    while index + pixelate(square_H + margin_H + spacing_H + min_finger_width + 0.3) < matrix_rows:
         not_zero = np.where(matrix[index] > 0)[0]
-        not_zero_index = not_zero[len(not_zero)-1] - pixelate(margin_W + square_W/2 + 1 + busbar_width)
+        not_zero_index = not_zero[len(not_zero)-1] - pixelate(margin_W + square_W/2 + 1 + busbar_width) - 2
         x_coord = not_zero[0] + pixelate(margin_W + square_W/2 + 1 + busbar_width)
         top = index - pixelate(square_H/2 + margin_H + spacing_H + min_finger_width + 0.3)
         bottom = index + pixelate(square_H/2 + margin_H + spacing_H + min_finger_width + 0.3)
@@ -125,9 +125,10 @@ def calculate_amount_of_elements(margin_H, margin_W, square_H, square_W, spacing
             x_coord_right = x_coord + pixelate(square_W / 2)
             zero_in_matrix = False
             for i in range(top, bottom+1):
-                for j in matrix[i][x_coord_left - pixelate(margin_W):x_coord_right + pixelate(margin_W)]:
+                for j in matrix[i][x_coord_left - pixelate(margin_W) : x_coord_right + pixelate(margin_W)]:
                     if j == 0:
                         zero_in_matrix = True
+                        break
 
             if not zero_in_matrix:
 

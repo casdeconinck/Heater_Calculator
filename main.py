@@ -111,11 +111,11 @@ def calculation():
     # sorting the dataframes by the aspect-ratio
     pandas.DataFrame(response).transpose().sort_values(by=["square/aspect-ratio", "coverage [%]"],
                                                        ascending=[True, False], ignore_index=True)\
-        .to_csv("CSV_files/answers.csv")
+        .to_csv(r"F:\CDC\Heater_programs\answers.csv")
 
     pandas.DataFrame(new_dict).transpose().sort_values(by=["square/aspect-ratio", "coverage [%]"],
                                                        ascending=[True, False], ignore_index=True)\
-        .to_csv("CSV_files/select.csv")
+        .to_csv(r"F:\CDC\Heater_programs\select.csv")
 
     start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window)
     # gives a first visualisation drawn with turtle library
@@ -123,13 +123,21 @@ def calculation():
 
 
 # Other buttons in the GUI
-start = t.PhotoImage(file="images/start.jpg").subsample(5, 5)
-start2 = t.PhotoImage(file="images/start2.jpg").subsample(5, 5)
+# start = t.PhotoImage(file="images/start.jpg").subsample(5, 5)
+# start2 = t.PhotoImage(file="images/start2.jpg").subsample(5, 5)
 
-button = t.Button(image=start, command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
+# button = t.Button(image=start, command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
+# button.grid(row=12, column=0, columnspan=2, pady=5)
+
+# button = t.Button(image=start2, command=lambda: start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window),
+#                  highlightthickness=0, bd=0,
+#                  bg=BG, fg=TEXT_COLOR)
+#button.grid(row=12, column=2, pady=5)
+
+button = t.Button(text="start1", command=calculation, highlightthickness=0, bd=0,  bg=BG, fg=TEXT_COLOR)
 button.grid(row=12, column=0, columnspan=2, pady=5)
 
-button = t.Button(image=start2, command=lambda: start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window),
+button = t.Button(text="start2", command=lambda: start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window),
                   highlightthickness=0, bd=0,
                   bg=BG, fg=TEXT_COLOR)
 button.grid(row=12, column=2, pady=5)

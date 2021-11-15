@@ -40,7 +40,7 @@ def draw_irregular_in_corel(solution, h_mm, w_mm, min_finger_width):
 
 
 def draw_irregular(n, PATH, window_to_close):
-    d = pandas.read_csv("././CSV_files/answers.csv")
+    d = pandas.read_csv(r"F:\CDC\Heater_programs\answers.csv")
 
     spacing_H = float(d["space_H"][n])
     spacing_W = float(d["space_W"][n])

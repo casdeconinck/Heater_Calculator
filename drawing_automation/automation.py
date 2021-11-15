@@ -16,7 +16,7 @@ def draw(n):
     an automation of the mouse and keyboard."""
     with keyboard.Listener(on_press=on_press, suppress=False) as listener:
         # reading the csv file we got from our main program (which triggered calculator.py)
-        d = pandas.read_csv("./CSV_files/answers.csv")
+        d = pandas.read_csv(r"F:\CDC\Heater_programs\answers.csv")
 
         space_H = d["space_H"][n]
         space_W = d["space_W"][n]

@@ -12,7 +12,7 @@ def start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window_to_close):
     It allows to select a possibility or to write down a row of the csv file you want to draw.
     Upon clicking on it it will start the automation, after showing a pop-up window (see 'other_functions')"""
     # display different coverages and aspect ratio belonging with them:
-    doc = pandas.read_csv("././CSV_files/select.csv")
+    doc = pandas.read_csv(r"F:\CDC\Heater_programs\select.csv")
     for number in range(0, len(doc["coverage [%]"])):
         tup = str(doc['coverage [%]'][number]) + " / " + str(doc["square/aspect-ratio"][number])
         if tup not in list_possibilities:
@@ -20,7 +20,7 @@ def start_drawing(window, BG, TEXT_COLOR, irregular, PATH, window_to_close):
 
     def callback(selection):
         # selection contains a string "coverage(%) / aspect ratio"
-        doc1 = pandas.read_csv("././CSV_files/select.csv").transpose().to_dict()
+        doc1 = pandas.read_csv(r"F:\CDC\Heater_programs\select.csv").transpose().to_dict()
         sel = selection.split("/")
         for i in doc1:
             # we check the csv file with all answers for the row number that matches our selection
